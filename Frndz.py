@@ -33,7 +33,7 @@ def voting(chosen_student):
     """
     Updates the vote count for the chosen student and displays a confirmation message.
     """
-    students[chosen_student]["votes"] + 1
+    students[chosen_student]["votes"] += 1
     st.success(f"You voted for {students[chosen_student]['name']}!")
 
 
