@@ -1,4 +1,4 @@
-import time
+import random
 import streamlit as st
 
 students = {
@@ -12,22 +12,15 @@ students = {
 
 valid_students = list(students.keys())
 
-
 def get_two_unique_random_students():
     """
-    This function ensures two randomly chosen students are unique using time-based pseudo-randomness.
+    This function ensures two randomly chosen students are unique using randomness.
     """
-    current_time = time.time_ns()  # Get nanosecond timestamp
-    student1_index = int(current_time % len(valid_students))
-    student2_index = (student1_index + 1) % len(valid_students)  # Ensure different index
-
-    return valid_students[student1_index], valid_students[student2_index]
-
+    return random.sample(valid_students, 2)
 
 student1, student2 = get_two_unique_random_students()
 student1_data = students[student1]
 student2_data = students[student2]
-
 
 def voting(chosen_student):
     """
@@ -35,7 +28,6 @@ def voting(chosen_student):
     """
     students[chosen_student]["votes"] += 1
     st.success(f"You voted for {students[chosen_student]['name']}!")
-
 
 tab1, tab2 = st.tabs(["Vote", " Rank"])
 
