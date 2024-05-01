@@ -10,7 +10,7 @@ students = {
     "std6": {"name": "ajay", "image": "Frndz/images/ajay.jpg", "votes": 0},
 }
 
-valid_students = list(students.keys())
+valid_students = students.keys()
 
 def get_two_unique_random_students():
     """
@@ -27,7 +27,7 @@ def voting(chosen_student):
     Updates the vote count for the chosen student and displays a confirmation message.
     """
     students[chosen_student]["votes"] += 1
-    st.success(f"You voted for {students[chosen_student]['name']}!")
+    st.success("You voted for " + students[chosen_student]["name"] + "!")
 
 tab1, tab2 = st.tabs(["Vote", " Rank"])
 
@@ -49,4 +49,4 @@ with tab1:
 with tab2:
     # Directly iterate through the original students dictionary for ranking display
     for student_name, student_data in students.items():
-        st.write(f"{student_data['name']} {student_data['votes']}")
+        st.write(student_data["name"] + " " + str(student_data["votes"]))
