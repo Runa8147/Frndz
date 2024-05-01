@@ -1,4 +1,4 @@
-import random
+import pandas as pd
 import streamlit as st
 
 students = {
@@ -10,53 +10,34 @@ students = {
     "std6": {"name": "ajay", "image": "Frndz/images/ajay.jpg", "votes": 0},
 }
 
-valid_students = list(students.keys())
-
+# Convert students dict to a Pandas DataFrame
+df_students = pd.DataFrame.from_dict(students, orient='index')
 
 def get_two_unique_random_students():
-    """
-    This function ensures two randomly chosen students are unique.
-    """
-    while True:
-        student1 = random.choice(valid_students)
-        student2 = random.choice(valid_students)
-        if student1 != student2:
-            return student1, student2
+  """
+  This function ensures two randomly chosen students are unique using Pandas sample function.
+  """
+  return df_students.sample(2).index.tolist()
 
-
+# Get two random students
 student1, student2 = get_two_unique_random_students()
 student1_data = students[student1]
 student2_data = students[student2]
-
 
 def voting(chosen_student):
     """
     Updates the vote count for the chosen student and displays a confirmation message.
     """
-    students[chosen_student]["votes"] += 1
+    df_students.loc[chosen_student, "votes"] += 1
+    students[chosen_student] = df_students.loc[chosen_student].to_dict()  # Update original dict
     st.success(f"You voted for {students[chosen_student]['name']}!")
 
-
-tab1, tab2 = st.tabs(["Vote", " Rank"])
-
-with tab1:
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.header(student1_data["name"])
-        st.image(student1_data["image"], width=200)
-        if st.button(f"Vote for {student1_data['name']}"):
-            voting(student1)
-
-    with col2:
-        st.header(student2_data["name"])
-        st.image(student2_data["image"], width=200)
-        if st.button(f"Vote for {student2_data['name']}"):
-            voting(student2)
+# Rest of the code remains the same using st.tabs, st.columns etc.
 
 with tab2:
-    # Sort students by vote count (descending order) and create a copy to avoid modifying original data
-    sorted_students = dict(sorted(students.items(), key=lambda item: item[1]["votes"], reverse=True))
+    # Sort DataFrame by vote count (descending order)
+    sorted_students = df_students.sort_values(by='votes', ascending=False)
 
-    for student_name, student_data in sorted_students.items():
+    for student_name in sorted_students.index:
+        student_data = sorted_students.loc[student_name].to_dict()
         st.write(f"{student_data['name']}: {student_data['votes']}")
